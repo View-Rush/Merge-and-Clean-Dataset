@@ -1,0 +1,3 @@
+# Configuration for database connections
+output:
+  csv_path: ../data/merged_output.csv
