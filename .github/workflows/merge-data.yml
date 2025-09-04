@@ -7,9 +7,15 @@ jobs:
   merge-data:
     runs-on: ubuntu-latest
     env:
-      # Set secrets as environment variables if needed
-      # Example: POSTGRES_CONN_STRING: ${{ secrets.POSTGRES_CONN_STRING }}
-      # Example: GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_KEY_JSON }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      BIGQUERY_PROJECT_ID: ${{ secrets.BIGQUERY_PROJECT_ID }}
+      BIGQUERY_DATASET: ${{ secrets.BIGQUERY_DATASET }}
+      BIGQUERY_TABLE: ${{ secrets.BIGQUERY_TABLE }}
+      BIGQUERY_CREDENTIALS_PATH: ${{ secrets.BIGQUERY_CREDENTIALS_PATH }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,6 +41,14 @@ jobs:
       #   run: echo "POSTGRES_CONN_STRING=$POSTGRES_CONN_STRING" >> $GITHUB_ENV
       #   env:
       #     POSTGRES_CONN_STRING: ${{ secrets.POSTGRES_CONN_STRING }}
+
+      - name: Write BigQuery credentials file
+        run: |
+          echo "$BIGQUERY_CREDENTIALS_JSON" > "$BIGQUERY_CREDENTIALS_PATH"
+          chmod 600 "$BIGQUERY_CREDENTIALS_PATH"
+        env:
+          BIGQUERY_CREDENTIALS_JSON: ${{ secrets.BIGQUERY_CREDENTIALS_JSON }}
+          BIGQUERY_CREDENTIALS_PATH: ${{ secrets.BIGQUERY_CREDENTIALS_PATH }}
 
       - name: Run merge.py
         run: |
