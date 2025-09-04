@@ -6,6 +6,7 @@ import psycopg2
 import pandas as pd
 from google.cloud import bigquery
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables
 load_dotenv()
@@ -22,10 +23,12 @@ def get_postgres_connection():
 
 def get_bigquery_client():
     """Create and return a BigQuery client."""
+    repo_root = Path(__file__).resolve().parent.parent
     credentials_path = os.getenv('BIGQUERY_CREDENTIALS_PATH')
+
     if credentials_path:
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
-    
+        credentials_file = (repo_root / credentials_path).resolve()
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = str(credentials_file)
     project_id = os.getenv('BIGQUERY_PROJECT_ID')
     return bigquery.Client(project=project_id)
 
