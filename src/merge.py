@@ -59,8 +59,13 @@ def merge_video_data():
     )
 
     # Flatten MultiIndex columns and rename
+    metric_map = {
+        'viewCount': 'views',
+        'likeCount': 'likes',
+        'commentCount': 'comments'
+    }
     stats_wide.columns = [
-        f'day_{day}_{metric.replace("Count", "").lower() + "s"}'
+        f'day_{day}_{metric_map.get(metric, metric)}'
         for metric, day in stats_wide.columns
     ]
     stats_wide = stats_wide.reset_index()
