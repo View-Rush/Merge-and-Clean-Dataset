@@ -64,7 +64,7 @@ def merge_video_data():
                 day_index = row['dayIndex']
 
                 if pd.notna(day_index) and 0 <= day_index <= 29:
-                    day_index = int(day_index) + 1 # Convert to 1-based index
+                    day_index = int(day_index) + 1  # Convert to 1-based index
 
                     # Update the corresponding day columns
                     video_mask = merged_df['id'] == video_id
