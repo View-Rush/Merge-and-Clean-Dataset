@@ -45,6 +45,7 @@ jobs:
       - name: Write BigQuery credentials file
         run: |
           echo "$BIGQUERY_CREDENTIALS_JSON" > "$BIGQUERY_CREDENTIALS_PATH"
+          chmod 600 "$BIGQUERY_CREDENTIALS_PATH"
         env:
           BIGQUERY_CREDENTIALS_JSON: ${{ secrets.BIGQUERY_CREDENTIALS_JSON }}
           BIGQUERY_CREDENTIALS_PATH: ${{ secrets.BIGQUERY_CREDENTIALS_PATH }}
