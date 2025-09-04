@@ -3,12 +3,10 @@ Script to merge data from Aiven PostgreSQL and BigQuery into a CSV file.
 Combines video metadata from PostgreSQL with 30-day statistics from BigQuery.
 """
 import pandas as pd
-import numpy as np
 from datetime import datetime
 from db_utils import fetch_video_metadata, fetch_video_stats
 import yaml
 import os
-from tqdm import tqdm
 
 def load_config():
     """Load configuration from config.yaml."""
