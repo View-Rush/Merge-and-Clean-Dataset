@@ -44,45 +44,61 @@ def merge_video_data():
     # Create columns for 30 days of data
     daily_columns = create_daily_columns()
 
-    # Initialize the merged dataframe with metadata
-    merged_df = metadata_df.copy()
-
     # Add empty columns for daily statistics
+    # Pivot stats_df to wide format: one row per videoId, columns for each day's metrics
+    stats_pivot = stats_df.copy()
+
+    # Ensure dayIndex is integer and 1-based
+    stats_pivot = stats_pivot[stats_pivot['dayIndex'].notna()]
+    stats_pivot['dayIndex'] = stats_pivot['dayIndex'].astype(int) + 1
+
+    # Pivot to get columns like day_1_views, day_1_likes, etc.
+    stats_wide = stats_pivot.pivot_table(
+        index='videoId',
+        columns='dayIndex',
+        values=['viewCount', 'likeCount', 'commentCount'],
+        aggfunc='first'
+    )
+
+    # Flatten MultiIndex columns and rename
+    stats_wide.columns = [
+        f'day_{day}_{metric.replace("Count", "").lower() + "s"}'
+        for metric, day in stats_wide.columns
+    ]
+    stats_wide = stats_wide.reset_index()
+
+    # Merge with metadata_df
+    merged_df = metadata_df.merge(stats_wide, left_on='id', right_on='videoId', how='left')
+
+    # Drop the redundant videoId column from stats_wide
+    merged_df = merged_df.drop(columns=['videoId'])
+
+    # Ensure all daily columns are present (fill missing ones with NaN)
     for col in daily_columns:
-        merged_df[col] = np.nan
+        if col not in merged_df.columns:
+            merged_df[col] = pd.NA
+        merged_df[col] = merged_df[col].astype("Int64")
 
-    print("Merging daily statistics...")
-
-    # Process each video
-    # Wrap the loop with tqdm for a progress bar
-    for video_id in tqdm(merged_df['id'], desc="Merging videos", unit="video"):
-        video_stats = stats_df[stats_df['videoId'] == video_id]
-
-        if not video_stats.empty:
-            # Group by dayIndex and fill the appropriate columns
-            for _, row in video_stats.iterrows():
-                day_index = row['dayIndex']
-
-                if pd.notna(day_index) and 0 <= day_index <= 29:
-                    day_index = int(day_index) + 1 # Convert to 1-based index
-
-                    # Update the corresponding day columns
-                    video_mask = merged_df['id'] == video_id
-
-                    if pd.notna(row['viewCount']):
-                        merged_df.loc[video_mask, f'day_{day_index}_views'] = row['viewCount']
-
-                    if pd.notna(row['likeCount']):
-                        merged_df.loc[video_mask, f'day_{day_index}_likes'] = row['likeCount']
-
-                    if pd.notna(row['commentCount']):
-                        merged_df.loc[video_mask, f'day_{day_index}_comments'] = row['commentCount']
+    # Reorder columns
+    merged_df = reorder_columns(merged_df)
 
     print(f"Merged data for {len(merged_df)} videos")
     print(merged_df.head())
     print(f"Total columns: {len(merged_df.columns)}")
     return merged_df
 
+def reorder_columns(merged_df):
+    """Reorder columns so that all views, then likes, then comments are grouped."""
+    # Keep non-daily columns first
+    non_daily = [col for col in merged_df.columns if not col.startswith("day_")]
+
+    # Collect ordered daily columns
+    views = [f"day_{i}_views" for i in range(1, 31)]
+    likes = [f"day_{i}_likes" for i in range(1, 31)]
+    comments = [f"day_{i}_comments" for i in range(1, 31)]
+
+    ordered_columns = non_daily + views + likes + comments
+    return merged_df[ordered_columns]
 
 def save_to_csv(df, output_path):
     """Save the merged dataframe to CSV."""
