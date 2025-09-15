@@ -13,7 +13,7 @@
 | **Notes**             | Each snapshot represents the state of YouTube videos as of collection date.                                                                             |
 | **Prepared By**       | Group 21 - Data Science Project - CSE UoM                                                                                                               |
 | **Point of Contact**  | [kevin.22@cse.mrt.ac.lk](kevin.22@cse.mrt.ac.lk)                                                                                                        |
-| **Team Members**      | [Kevin Sanjula](https://github.com/Ke-vin-S)<br/>[ Pasindu Senevirathne ](https://github.com/L0rd008)<br/>[Shaamma Sajahan](https://github.com/Shaamma) |
+| **Team Members**      | [Kevin Sanjula](https://github.com/Ke-vin-S)<br/>[Pasindu Senevirathne](https://github.com/L0rd008)<br/>[Shaamma Sajahan](https://github.com/Shaamma) |
 
 ### Attribute Overview
 | Column Name                          | Type        | Description / Notes                                                                      |
