@@ -38,7 +38,7 @@
 | `likes_count`                        | float       | Total number of likes.                                                                   |
 | `favourite_count`                    | int/float   | Total number of favourites (historically used; often 0).                                 |
 | `comment_count`                      | float       | Total number of comments.                                                                |
-| `inserted_at`                        | datetime    | Timestamp when this row was inserted into metadata database(UTC).                        |
+| `inserted_at`                        | datetime    | Timestamp when this row was inserted into metadata database (UTC).                       |
 | `day_1_views` … `day_30_views`       | int         | Cumulative view counts for each day after publication (day 1 = first day after publish). |
 | `day_1_likes` … `day_30_likes`       | int         | Likes count per day for first 30 days.                                                   |
 | `day_1_comments` … `day_30_comments` | int         | Comments count per day for first 30 days.                                                |
