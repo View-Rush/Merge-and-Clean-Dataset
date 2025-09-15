@@ -19,7 +19,7 @@
 | Column Name                          | Type        | Description / Notes                                                                      |
 |--------------------------------------|-------------|------------------------------------------------------------------------------------------|
 | `id`                                 | string      | YouTube video ID (unique identifier).                                                    |
-| `published_at`                       | datetime    | Date and time the video was published(UTC).                                              |
+| `published_at`                       | datetime    | Date and time the video was published (UTC).                                             |
 | `channel_id`                         | string      | Unique ID of the channel that published the video.                                       |
 | `title`                              | string      | Title of the video.                                                                      |
 | `description`                        | string      | Full description of the video.                                                           |
